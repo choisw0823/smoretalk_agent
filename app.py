@@ -181,7 +181,7 @@ uploaded_image = st.file_uploader("이미지 업로드", type=["jpg", "jpeg", "p
 # 메뉴 선택
 menu_option = st.selectbox(
     "메뉴 선택",
-    ["Short video"],
+    ["Short video", "Banner"],
     index=0
 )
 
