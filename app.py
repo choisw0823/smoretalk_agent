@@ -26,7 +26,7 @@ os.environ["REPLICATE_API_TOKEN"] = replicate_api_token
 
 # 페이지 설정
 st.set_page_config(
-    page_title="영상 생성",
+    page_title="영상/배너 생성",
     page_icon="🎬",
     layout="wide",
     initial_sidebar_state="collapsed"
@@ -125,8 +125,8 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # 헤더
-st.markdown("<h1 class='header'>영상 생성 도구</h1>", unsafe_allow_html=True)
-st.markdown("<p class='subheader'>텍스트와 이미지를 입력하여 영상을 생성하세요</p>", unsafe_allow_html=True)
+st.markdown("<h1 class='header'>영상/배너 생성 도구</h1>", unsafe_allow_html=True)
+st.markdown("<p class='subheader'>텍스트와 이미지를 입력하여 영상/배너를 생성하세요</p>", unsafe_allow_html=True)
 
 # 함수: 이미지를 base64로 인코딩
 def encode_image_to_base64(image):
@@ -169,7 +169,7 @@ def generate_video(text, image, menu, aspect_ratio):
         return None
 
 # 메인 컨텐츠
-st.markdown("<h3 style='margin-bottom: 1rem;'>영상 생성</h3>", unsafe_allow_html=True)
+st.markdown("<h3 style='margin-bottom: 1rem;'>영상/배너 생성</h3>", unsafe_allow_html=True)
 
 # 텍스트 입력
 text_input = st.text_area("텍스트 입력", "", height=100, placeholder="A woman is holding case.")
@@ -192,13 +192,13 @@ aspect_ratio_option = st.selectbox(
 )
 
 # 생성 버튼
-if st.button("영상 생성", use_container_width=True):
+if st.button("생성 시작", use_container_width=True):
     if uploaded_image is None:
         st.warning("이미지를 업로드해주세요.")
     else:
         # 영상 생성 중 메시지 표시
         status_placeholder = st.empty()
-        status_placeholder.info("영상 생성이 시작되었습니다. 생성에는 몇 분 정도 소요될 수 있습니다. 생성이 완료될 때까지 기다려주세요.")
+        status_placeholder.info("생성이 시작되었습니다. 생성에는 몇 분 정도 소요될 수 있습니다. 생성이 완료될 때까지 기다려주세요.")
         
         with st.spinner("영상을 생성하는 중..."):
             # 이미지 로드
@@ -215,7 +215,7 @@ if st.button("영상 생성", use_container_width=True):
             if video_url:
                 # 생성 중 메시지 제거
                 status_placeholder.empty()
-                st.success("영상 생성이 완료되었습니다!")
+                st.success("생성이 완료되었습니다!")
                 
                 try:
                     # 영상 데이터 다운로드
@@ -244,7 +244,7 @@ if st.button("영상 생성", use_container_width=True):
                         col1, col2 = st.columns([1, 3])
                         with col1:
                             st.download_button(
-                                label="영상 다운로드",
+                                label="다운로드",
                                 data=video_data,
                                 file_name="generated_video.mp4",
                                 mime="video/mp4",
@@ -252,10 +252,10 @@ if st.button("영상 생성", use_container_width=True):
                                 key="download_video"  # 고유 키 추가
                             )
                     else:
-                        st.error(f"영상 다운로드 실패 (상태 코드: {video_response.status_code})")
-                        st.error("영상 URL을 직접 확인해보세요:")
+                        st.error(f"다운로드 실패 (상태 코드: {video_response.status_code})")
+                        st.error("URL을 직접 확인해보세요:")
                         st.code(video_url)
                 except Exception as e:
-                    st.error(f"영상 표시 중 오류가 발생했습니다: {str(e)}")
-                    st.error("영상 URL을 직접 확인해보세요:")
+                    st.error(f"표시 중 오류가 발생했습니다: {str(e)}")
+                    st.error("URL을 직접 확인해보세요:")
                     st.code(video_url)
