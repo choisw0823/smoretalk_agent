@@ -31,7 +31,6 @@ st.set_page_config(
     layout="wide",
     initial_sidebar_state="collapsed"
 )
-
 # 로고 이미지 표시
 try:
     logo_image = Image.open("assets/logo.png")
