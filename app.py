@@ -225,7 +225,7 @@ if st.button("생성 시작", use_container_width=True):
                         
                         if menu_option == "Banner":
                             # 배너 이미지 표시
-                            st.image(result_data, width=200)
+                            st.image(result_data, width=400)
                             
                             # 다운로드 버튼 (상태 유지)
                             col1, col2 = st.columns([1, 3])
