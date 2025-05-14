@@ -196,66 +196,82 @@ if st.button("생성 시작", use_container_width=True):
     if uploaded_image is None:
         st.warning("이미지를 업로드해주세요.")
     else:
-        # 영상 생성 중 메시지 표시
+        # 생성 중 메시지 표시
         status_placeholder = st.empty()
         status_placeholder.info("생성이 시작되었습니다. 생성에는 몇 분 정도 소요될 수 있습니다. 생성이 완료될 때까지 기다려주세요.")
         
-        with st.spinner("영상을 생성하는 중..."):
+        with st.spinner("생성 중..."):
             # 이미지 로드
             image = Image.open(uploaded_image)
             
-            # 영상 생성
-            video_url = generate_video(
+            # 생성
+            result_url = generate_video(
                 text=text_input,
                 image=image,
                 menu=menu_option,
                 aspect_ratio=aspect_ratio_option
             )
             
-            if video_url:
+            if result_url:
                 # 생성 중 메시지 제거
                 status_placeholder.empty()
                 st.success("생성이 완료되었습니다!")
                 
                 try:
-                    # 영상 데이터 다운로드
-                    video_response = requests.get(video_url)
-                    if video_response.status_code == 200:
-                        video_data = video_response.content
+                    # 결과 데이터 다운로드
+                    response = requests.get(result_url)
+                    if response.status_code == 200:
+                        result_data = response.content
                         
-                        # 영상 표시 (HTML/CSS로 크기 조절)
-                        st.markdown("""
-                        <style>
-                        .video-container {
-                            width: 200px;
-                            margin: 0 auto;
-                        }
-                        .video-container video {
-                            width: 100%;
-                            height: auto;
-                        }
-                        </style>
-                        <div class="video-container">
-                        """, unsafe_allow_html=True)
-                        st.video(video_data)
-                        st.markdown("</div>", unsafe_allow_html=True)
-                        
-                        # 다운로드 버튼 (상태 유지)
-                        col1, col2 = st.columns([1, 3])
-                        with col1:
-                            st.download_button(
-                                label="다운로드",
-                                data=video_data,
-                                file_name="generated_video.mp4",
-                                mime="video/mp4",
-                                use_container_width=True,
-                                key="download_video"  # 고유 키 추가
-                            )
+                        if menu_option == "Banner":
+                            # 배너 이미지 표시
+                            st.image(result_data, width=200)
+                            
+                            # 다운로드 버튼 (상태 유지)
+                            col1, col2 = st.columns([1, 3])
+                            with col1:
+                                st.download_button(
+                                    label="다운로드",
+                                    data=result_data,
+                                    file_name="generated_banner.png",
+                                    mime="image/png",
+                                    use_container_width=True,
+                                    key="download_banner"
+                                )
+                        else:
+                            # 영상 표시 (HTML/CSS로 크기 조절)
+                            st.markdown("""
+                            <style>
+                            .video-container {
+                                width: 200px;
+                                margin: 0 auto;
+                            }
+                            .video-container video {
+                                width: 100%;
+                                height: auto;
+                            }
+                            </style>
+                            <div class="video-container">
+                            """, unsafe_allow_html=True)
+                            st.video(result_data)
+                            st.markdown("</div>", unsafe_allow_html=True)
+                            
+                            # 다운로드 버튼 (상태 유지)
+                            col1, col2 = st.columns([1, 3])
+                            with col1:
+                                st.download_button(
+                                    label="다운로드",
+                                    data=result_data,
+                                    file_name="generated_video.mp4",
+                                    mime="video/mp4",
+                                    use_container_width=True,
+                                    key="download_video"
+                                )
                     else:
-                        st.error(f"다운로드 실패 (상태 코드: {video_response.status_code})")
+                        st.error(f"다운로드 실패 (상태 코드: {response.status_code})")
                         st.error("URL을 직접 확인해보세요:")
-                        st.code(video_url)
+                        st.code(result_url)
                 except Exception as e:
                     st.error(f"표시 중 오류가 발생했습니다: {str(e)}")
                     st.error("URL을 직접 확인해보세요:")
-                    st.code(video_url)
+                    st.code(result_url)
