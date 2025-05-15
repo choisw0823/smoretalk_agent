@@ -152,7 +152,7 @@ def generate_video(text, image, menu, aspect_ratio):
         }
         
         output = replicate.run(
-            "smoretalk/agent-demo:da3364a3b51d323f5969b9f0d08422765f78b3292fa438b3ca6b140c42b5b23d",
+            "smoretalk/agent-demo:f2e829c52d84c172360bd74a7de5c1b58d5e45a4faad9a646837b8ef52d1136a",
             input=input
         )
         
